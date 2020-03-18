@@ -1,0 +1,32 @@
+Kit#SQK-LSK109
+Barcodekit#EXP-NBD104
+Flowcell#FLO-MIN106
+NB01#S.37.17.Cf
+NB02#S.38.17.Ko
+NB03#S.40.17.Ko
+NB04#S.40.17.Ko
+NB05#S.41.17.Cf
+NB08#S.43.17.Ko
+
+
+%% HELP for the input above
+%%
+%% No barcodes:
+%%      replace SQK-LSK109 if you have another Kit
+%%      remove Barcodekit#EXP-NBD104
+%%      write NB01#SAMPLENAME
+%%      remove the remaining NB0X lines
+%% 
+%% Using a Barcode kit:
+%%      replace SQK-LSK109 if you have another Kit
+%%      replace EXP-NBD104 if you have another Kit
+%%
+%%      for each barcode that you are using add the barcode number and 
+%%      sample name based on the following style:
+%%      NB01#SAMPLENAME1
+%%      NB02#SAMPLENAME2       (etc.)
+%%      remove barcode lines that you are not using
+%%
+%% Save and close changes:
+%%      press Strg + o   to save
+%%      press Strg + x   to close
