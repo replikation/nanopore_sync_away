@@ -112,8 +112,8 @@ scp  "/tmp/ont_upload_prep/run_info_upload.txt" "${IP}:${SYNOLOGY_FAST5_LOCATION
 
 while true;
 do
-  rsync --rsync-path=/bin/rsync -vcr --include "*.fast5" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/FAST5"
-  rsync --rsync-path=/bin/rsync -vcr --include "*.txt" --include "*.md" --include "*.csv" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/log_info"
+  rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.fast5" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/FAST5"
+  rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.txt" --include "*.md" --include "*.csv" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/log_info"
   sleep 10 ;
 done
 }
