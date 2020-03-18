@@ -69,10 +69,11 @@ yes_no_input()
 
 check_uniq_ID()
 {
-    ssh $IP ls ${SYNOLOGY_FAST5_LOCATION} > /tmp/ont_upload_prep/SEQ_ID_list.txt
-    FAST5_DIRS_SYN=$(cat /tmp/ont_upload_prep/SEQ_ID_list.txt)
+    ssh $IP ls -l ${SYNOLOGY_FAST5_LOCATION} > /tmp/ont_upload_prep/SEQ_ID_list.txt
 
-    if echo ${FAST5_DIRS_SYN} | grep -w ${UPLOADFOLDER} > /dev/null; then
+ 
+    if grep -q "${UPLOADFOLDER}" /tmp/ont_upload_prep/SEQ_ID_list.txt
+    then 
         echo -e "${LRED} ${UPLOADFOLDER} exists on synology, exiting.. ${NC}"
         exit 1
     fi
