@@ -107,12 +107,13 @@ transfer()
 mkdir -p "/tmp/ont_upload_prep/${UPLOADFOLDER}/FAST5"
 mkdir -p "/tmp/ont_upload_prep/${UPLOADFOLDER}/log_info" 
 scp -r "/tmp/ont_upload_prep/${UPLOADFOLDER}" ${IP}:${SYNOLOGY_FAST5_LOCATION}
-scp  "/tmp/ont_upload_prep/run_info.txt" "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/"
+cat /tmp/ont_upload_prep/run_info.txt | grep -v "%" > /tmp/ont_upload_prep/run_info_upload.txt
+scp  "/tmp/ont_upload_prep/run_info_upload.txt" "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/run_info.txt"
 
 while true;
 do
-  rsync --rsync-path=/bin/rsync -vcr -e --bwlimit=3M "ssh -i ~/.ssh/id_rsa" --include "*.fast5" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/FAST5"
-  rsync --rsync-path=/bin/rsync -vcr -e --bwlimit=3M "ssh -i ~/.ssh/id_rsa" --include "*.txt" --include "*.md" --include "*.csv" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/log_info"
+  rsync --rsync-path=/bin/rsync -vcr --include "*.fast5" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/FAST5"
+  rsync --rsync-path=/bin/rsync -vcr --include "*.txt" --include "*.md" --include "*.csv" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/log_info"
   sleep 10 ;
 done
 }
