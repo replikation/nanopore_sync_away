@@ -105,10 +105,9 @@ done
 transfer()
 {
 mkdir -p "/tmp/ont_upload_prep/${UPLOADFOLDER}/FAST5"
-mkdir -p "/tmp/ont_upload_prep/${UPLOADFOLDER}/log_info" 
+mkdir -p "/tmp/ont_upload_prep/${UPLOADFOLDER}/log_info"
+cat /tmp/ont_upload_prep/run_info.txt | grep -v "%" > /tmp/ont_upload_prep/${UPLOADFOLDER}/run_info.txt
 scp -r "/tmp/ont_upload_prep/${UPLOADFOLDER}" ${IP}:${SYNOLOGY_FAST5_LOCATION}
-cat /tmp/ont_upload_prep/run_info.txt | grep -v "%" > /tmp/ont_upload_prep/run_info_upload.txt
-scp  "/tmp/ont_upload_prep/run_info_upload.txt" "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/run_info.txt"
 
 while true;
 do
