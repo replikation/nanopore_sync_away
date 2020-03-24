@@ -146,7 +146,7 @@ while true; do
         echo -e "${RED}${folders}${NC}"
         read -p "Which directory should i upload: " RUN_NAME
         # test user input
-        if test -f "${FAST5_DIR_DEFAULT}/${RUN_NAME}"; then
+        if test -d "${FAST5_DIR_DEFAULT}/${RUN_NAME}"; then
             FAST5_DIR=${FAST5_DIR_DEFAULT}/${RUN_NAME}
         else
             echo "typo? cant find the directory"
