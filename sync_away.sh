@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 YEL='\033[0;33m'
-RED='\033[0;31m'
-LRED='\033[0;91m'
+RED='\033[0;33m'
 LGRE='\033[0;92m'
 NC='\033[0m' # No Color
 
@@ -11,6 +10,9 @@ FAST5_DIR_CUSTOM=$1
 FAST5_DIR_DEFAULT="$HOME/nanopore_fast5_data"
 SYNOLOGY_FAST5_LOCATION="/volume1/Database_FAST5_raw_data"
 mkdir -p /tmp/ont_upload_prep/
+
+# clean up empty dirs first at the default location
+find ${FAST5_DIR_DEFAULT} -type d -empty -delete
 
 ############################
 # MODULES                  #
@@ -73,7 +75,7 @@ check_uniq_ID()
  
     if grep -wq "${UPLOADFOLDER%/}" /tmp/ont_upload_prep/SEQ_ID_list.txt
     then 
-        echo -e "${LRED} ${UPLOADFOLDER} exists on synology, exiting.. ${NC}"
+        echo -e "${RED} ${UPLOADFOLDER} exists on synology, exiting.. ${NC}"
         exit 1
     fi
 }
@@ -109,10 +111,22 @@ transfer()
     cat /tmp/ont_upload_prep/run_info.txt | grep -v "%" > /tmp/ont_upload_prep/${UPLOADFOLDER}/run_info.txt
     scp -r "/tmp/ont_upload_prep/${UPLOADFOLDER}" ${IP}:${SYNOLOGY_FAST5_LOCATION}
 
-    while true;
-    do
-    rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.fast5" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/fast5"
-    rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.txt" --include "*.md" --include "*.csv" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/log_info"
+# rsync until the final summary appears after MINKOWN is done
+
+    while true; do
+        summarypath=$(find ${FAST5_DIR} -name "final_summary*.txt")
+        if [ -e "$summarypath" ]
+		then
+            sleep 10
+            rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.fast5" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/fast5"
+            rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.txt" --include "*.md" --include "*.csv" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/log_info"
+		    echo "Nanopore sequencing is finished, exiting transfer script"
+            echo "Bye Bye"
+			exit 0
+		else
+		    rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.fast5" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/fast5"
+            rsync --rsync-path=/bin/rsync -vcr --remove-source-files --include "*.txt" --include "*.md" --include "*.csv" --include "*/" --exclude "*" ${FAST5_DIR} "${IP}:${SYNOLOGY_FAST5_LOCATION}/$UPLOADFOLDER/log_info"
+		fi
     sleep 10 ;
     done
 }
