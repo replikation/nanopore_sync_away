@@ -13,6 +13,7 @@ mkdir -p /tmp/ont_upload_prep/
 
 # clean up empty dirs first at the default location
 find ${FAST5_DIR_DEFAULT} -type d -empty -delete
+mkdir -p ${FAST5_DIR_DEFAULT}
 
 ############################
 # MODULES                  #
